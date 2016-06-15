@@ -56,33 +56,23 @@
 	      var mapdiv = document.getElementById('map')
 	      mappy = new Map({lat:27,lng:-4}, 2);
 	      mapdiv.innerHTML = mappy
-	      var url = 'http://localhost:3000'
-	      var request = new XMLHttpRequest();
-	      request.open("GET", url);
-	      request.onload = function(){
-	        if(request.status === 200){
-	          var list = JSON.parse(request.responseText)
-	          for (place of list){
-	            markMap(place.latlng);
-	           }
-	          }
-	        }
+	      getMeth();
+	
 	      }
 	
 	      var style = function(){
 	        var body = document.querySelector('body')
 	        var text = document.querySelector('ul')
 	        var heading = document.querySelector('h1')
-	        body.style.backgroundColor = '#a2c19f';
-	        body.style.backgroundImage = "url('http://239magazine.com/wp-content/uploads/2016/04/earth.jpg')";
-	        text.style.backgroundColor = '#92D8EE'
-	        text.style.color = '#04151b'
+	        body.style.backgroundColor = '#000';
+	        text.style.backgroundColor = 'grey'
+	        text.style.color = 'white'
 	        text.style.display = 'inline-block'
 	        text.style.borderRadius = '10px'
 	        text.style.padding = '10px'
 	        text.style.align = 'center'
-	        heading.style.backgroundColor = '#92D8EE'
-	        heading.style.color = '#04151b'
+	        heading.style.backgroundColor = 'grey'
+	        heading.style.color = 'white'
 	        heading.style.display = 'block'
 	        heading.style.borderRadius = '10px'
 	        heading.style.textAlign = 'center'
@@ -118,7 +108,7 @@
 	            if(country.name === dropDown.value){
 	              
 	              cList.push({name:country.name, latlng:country.latlng});
-	              var url = 'http://localhost:3000'
+	              var url = 'http://localhost:3000/list'
 	              var request = new XMLHttpRequest();
 	              request.open("POST", url);
 	              request.setRequestHeader("Content-Type", "application/json");
@@ -129,22 +119,10 @@
 	              }
 	              request.send(JSON.stringify({name:country.name, latlng:country.latlng}))
 	              
+	              markMap(country)
 	
-	
-	              // localStorage.setItem('nations', JSON.stringify(nations:{name:country.name, latlng:country.latlng}))
-	              var center = {lat: country.latlng[0], lng: country.latlng[1]}
-	              console.log(country);
-	              // var map = new Map(center, 16);
-	              console.log(map);
-	              mappy.addMarker(center,"1")
-	
-	                 // map.addInfoWindow(center, '<p>' + "Country: " + country.name + '</p>' +
-	                 //                  "<p>Population: " + country.population + '</p>' +
-	                 //                  "<p>Capital: " + country.capital + '</p>')
-	            
 	            }
 	          }
-	          console.log(cList)
 	          list.innerHTML = null;
 	          for (var i = cList.length - 1; i >= 0; i--) {
 	            var li = document.createElement('li')
@@ -153,9 +131,6 @@
 	            li.innerText = cList[i].name + " | "
 	            list.appendChild(li)
 	          }
-	          
-	          
-	          
 	
 	            ul.appendChild(p)
 	            
@@ -171,11 +146,39 @@
 	      }
 	
 	    }
+	
 	         request.send(null);
 	  }
+	var getMeth = function() {
+	  var list = document.getElementById('list');
+	  var url = 'http://localhost:3000/list'
+	  var request = new XMLHttpRequest();
+	  request.open("GET", url);
+	  request.onload = function(){
+	    console.log(request.responseText)
+	    if(request.status === 200){
+	      var listu = JSON.parse(request.responseText)
+	      console.log("cheese",listu);
+	      for (place of listu){
+	        var li = document.createElement('li')
+	        li.style.display = "inline-block"
+	        li.style.margin = "5px"
+	        li.innerText = place.name + " | "
+	        list.appendChild(li)
+	        markMap(place);
+	       }
+	      }
+	    }
+	    request.send(null);
+	  }
+	  var markMap = function(country){
 	
+	    var center = {lat: country.latlng[0], lng: country.latlng[1]}
+	    // console.log(country);
+	    // console.log(map);
+	    mappy.addMarker(center,"1")
 	
-	
+	  }
 	
 	
 	

@@ -11,14 +11,11 @@ var MongoClient = require('mongodb').MongoClient;
 
 var url = "mongodb://localhost:27017/bucket_list";
 
-
-
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
-
-app.get('/', function(req, res){
+app.get('/list', function(req, res){
   MongoClient.connect(url, function(err, db){
     var collection = db.collection('list');
     collection.find({}).toArray(function(err, docs){
@@ -28,7 +25,7 @@ app.get('/', function(req, res){
   })
 })
 
-app.post('/', function(req,res) {
+app.post('/list', function(req,res) {
   console.log('body',req.body);
   MongoClient.connect(url, function(err,db) {
     var collection = db.collection('list');
@@ -39,10 +36,7 @@ app.post('/', function(req,res) {
 
 })
 
-
-
 app.use(express.static('client/build'));
-
 
 var server = app.listen(3000, function () {
   var host = server.address().address;
